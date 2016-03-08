@@ -40,6 +40,7 @@ public class Trip {
 	}
 	public List<String> getCitiesVisited(){
 		List<String> citiesVisited = new ArrayList<String>();
+		citiesVisited.clear();
 		if (this.getDestinations().isEmpty()) { return citiesVisited; }
 		for (Destination destination : this.getDestinations()) {
 			citiesVisited.add(destination.getCityCode());

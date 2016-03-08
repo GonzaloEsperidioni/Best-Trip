@@ -18,5 +18,13 @@
 	{
 		"from":"RIO",
 		"to":"SSA"
+	},
+	{
+		"from":"SSA",
+		"to":"BUE"
+	},
+	{
+		"from":"BUE",
+		"to":"TTT"
 	}
 ]
