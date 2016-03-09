@@ -26,7 +26,7 @@ public class App {
 
 		Server server = new Server();
 		ServerConnector serverConnector = new ServerConnector(server);
-		serverConnector.setPort(8085);
+		serverConnector.setPort(8080);
 		server.setConnectors(new Connector[] { serverConnector });
 		server.setHandler(handler);
 

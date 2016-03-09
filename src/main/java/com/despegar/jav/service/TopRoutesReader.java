@@ -32,8 +32,6 @@ public class TopRoutesReader {
 				routesFromLocation.add(route);
 			}
 		}
-		
-		System.out.println("RETORNO LISTA CON: " + routesFromLocation.size());
 		return routesFromLocation;
 	}
 	

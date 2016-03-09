@@ -20,11 +20,11 @@
 		"to":"SSA"
 	},
 	{
-		"from":"SSA",
-		"to":"BUE"
+		"from":"RIO",
+		"to":"MIA"
 	},
 	{
-		"from":"BUE",
-		"to":"TTT"
+		"from":"SSA",
+		"to":"BUE"
 	}
 ]

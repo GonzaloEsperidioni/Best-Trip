@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Trip {
 	
 	private double wallet;
@@ -31,13 +33,13 @@ public class Trip {
 			return destinations.get(destinations.size() - 1).getCityCode();
 		}
 	}
-	
 	public List<Destination> getDestinations(){
 		return destinations;
 	}
 	public void payAmount(Double toPay){
 		wallet -= toPay;
 	}
+	@JsonIgnore
 	public List<String> getCitiesVisited(){
 		List<String> citiesVisited = new ArrayList<String>();
 		citiesVisited.clear();

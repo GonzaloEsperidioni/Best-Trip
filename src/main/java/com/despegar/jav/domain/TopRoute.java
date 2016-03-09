@@ -24,6 +24,8 @@ public class TopRoute implements Serializable {
 		return to;
 	}
 	public String getCountry(){
-		return "ARG"; //TODO funcion que retorne el pais
+		String country = "AR";
+		
+		return country;
 	}
 }

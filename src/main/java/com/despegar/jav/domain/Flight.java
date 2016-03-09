@@ -1,5 +1,7 @@
 package com.despegar.jav.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Flight {
 
 	private Double amount;
@@ -25,5 +27,8 @@ public class Flight {
 	public void setAirline(String airline) {
 		this.airline = airline;
 	}
-	
+	@JsonIgnore
+	public boolean isValid(){
+		return this.getAmount() > 0;
+	}
 }

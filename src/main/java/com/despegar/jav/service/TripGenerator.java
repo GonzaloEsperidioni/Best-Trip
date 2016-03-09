@@ -1,16 +1,8 @@
 package com.despegar.jav.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.despegar.jav.App;
 import com.despegar.jav.domain.Destination;
 import com.despegar.jav.domain.Flight;
 import com.despegar.jav.domain.FlightWithRoute;
@@ -34,10 +26,13 @@ public class TripGenerator {
 	public Trip generateTrip(double money, String from){
 		String location = from;
 		Trip trip = new Trip(money);
-		//Destination test = new Destination("LLL", new Flight("MALASIA", 300.1));
-		//trip.addDestination(test);
+		Destination first = new Destination(location, null);
+		this.travel(first, trip);
 		Destination destinationNew = this.searchDestination(location, trip);
+		
+		if(this.canITravel(destinationNew, trip)){
 		this.travel(destinationNew, trip);
+		}
 		
 		while(this.canITravel(destinationNew, trip)){
 			destinationNew = this.searchDestination(location, trip);
@@ -50,8 +45,11 @@ public class TripGenerator {
 	}
 	
 	public void travel(Destination destinationToTravel, Trip trip){
+		if(destinationToTravel.getFlight() != null) {
 			trip.payAmount(destinationToTravel.getFlight().getAmount());
+		}
 			trip.addDestination(destinationToTravel);
+		
 	}
 	public boolean canITravel(Destination destinationToTravel, Trip trip){
 		return trip.getWallet() > destinationToTravel.getFlight().getAmount();
@@ -66,10 +64,7 @@ public class TripGenerator {
 		}
 		List<TopRoute> routesAvailables = routes.getTopRoutesFor(from);
 		List<String> visitedCities = trip.getCitiesVisited();
-		System.out.println("CIUDADES DISPONIBLES: " + routesAvailables.size());
-		System.out.println("CIUDADES VISITADAS: " + visitedCities.size());
 		routesAvailables = this.filterVisitedCities(visitedCities, routesAvailables);
-		System.out.println("DISPONIBLES DESPUES DE FILTRAR: " + routesAvailables.size());
 		FlightWithRoute cheapestFlight = this.getCheapestFlight(routesAvailables);;
 		Destination destinationReturn = new Destination(
 				cheapestFlight.getRoute().getTo(),// Seteo la ruta hacia donde va!
@@ -85,7 +80,6 @@ public class TripGenerator {
 				for (TopRoute topRoute : routesToFilter) {
 						if(!visitedCities.contains(topRoute.getTo().toString())){
 							filteredRoutes.add(topRoute);
-							System.out.println("AÑADO RUTA DISPONIBLE : " + topRoute.getFrom() + "   " + topRoute.getTo());
 						}
 				}
 			}
@@ -93,11 +87,11 @@ public class TripGenerator {
 		}
 	}
 	public FlightWithRoute getCheapestFlight(List<TopRoute> listaRutas){
-		Flight cheapestFlight = null; //new Flight("primero", 1000000000000.0); // Para primera comparacion!
+		Flight cheapestFlight = new Flight("primero", 1000000000000.0); // Para primera comparacion!
 		TopRoute cheapestRoute = new TopRoute();
 		for (TopRoute topRoute : listaRutas) {
 			Flight flightemp = flightPrice.getFlightPrice(topRoute); //TODO Ruta devuelva pais
-			if(flightemp.getAmount() < cheapestFlight.getAmount() | flightemp == null){
+			if(flightemp.getAmount() < cheapestFlight.getAmount() & flightemp.isValid()){
 				cheapestFlight = flightemp;
 				cheapestRoute = topRoute;
 			}			
