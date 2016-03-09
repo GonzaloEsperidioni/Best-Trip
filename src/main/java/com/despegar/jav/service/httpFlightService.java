@@ -30,7 +30,7 @@ public class httpFlightService {
                 + "&offset=0"
                 + "&limit=1"
                 + "&currency=USD"
-                + "&country=" + "AR"
+                + "&country=" + route.getCountry()
                 + "&from=" + route.getFrom()
                 + "&to=" + route.getTo());
 
