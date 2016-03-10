@@ -1,4 +1,4 @@
-package webapp.webapp;
+package com.despegar.test;
 
 
 import static org.junit.Assert.assertEquals;

@@ -42,10 +42,13 @@ public class TripGenerator {
 		
 		while(this.canITravel(destinationNew, trip)){
 			destinationNew = this.searchDestination(location, trip);
-			if(destinationNew.getCityCode() == null){ return trip; }
+			if(destinationNew.getCityCode() == null){ 
+				LOGGER.info("Trip Generator has run Successfully");
+				return trip; 
+				}
 			this.travel(destinationNew, trip);
 		}
-		LOGGER.info("Trip Generator has run Successfully");
+	
 		return trip;
 		
 	}
@@ -77,7 +80,7 @@ public class TripGenerator {
 		Destination destinationReturn = new Destination(
 				cheapestFlight.getRoute().getTo(),// Seteo la ruta hacia donde va!
 				cheapestFlight.getFlight()); //Le seteo el flight
-		return destinationReturn; //TODO devuelve destination para agregar.
+		return destinationReturn; // devuelve destination para agregar.
 	}
 	public List<TopRoute> filterVisitedCities (List<String> visitedCities, List<TopRoute> routesToFilter){
 		List<TopRoute> filteredRoutes = new ArrayList<TopRoute>();
@@ -97,16 +100,18 @@ public class TripGenerator {
 	}
 	public FlightWithRoute getCheapestFlight(List<TopRoute> listaRutas){
 		LOGGER.info("Searching Cheapest Flight");
-		Flight cheapestFlight = new Flight("primero", 1000000000000.0); // Para primera comparacion!
+		Flight cheapestFlight = new Flight("AA", 123.2); // -< El flight se va a eliminar de cualquier forma.
+		Boolean firstLoop = true;
 		TopRoute cheapestRoute = new TopRoute();
 		for (TopRoute topRoute : listaRutas) {
-			Flight flightemp = flightPrice.getFlightPrice(topRoute); //TODO Ruta devuelva pais
-			if(flightemp.getAmount() < cheapestFlight.getAmount() & flightemp.isValid()){
+			Flight flightemp = flightPrice.getFlightPrice(topRoute); //Ruta devuelva pais
+			if(flightemp.getAmount() < cheapestFlight.getAmount() & flightemp.isValid() | firstLoop){
 				cheapestFlight = flightemp;
 				cheapestRoute = topRoute;
+				firstLoop = false;
 			}			
 		}
-		return new FlightWithRoute(cheapestFlight, cheapestRoute); //TODO tuve que crear esta clase pq no podia pasar la ruta del vuelo.
+		return new FlightWithRoute(cheapestFlight, cheapestRoute); //tuve que crear esta clase pq no podia pasar la ruta del vuelo.
 	}
 	
 }

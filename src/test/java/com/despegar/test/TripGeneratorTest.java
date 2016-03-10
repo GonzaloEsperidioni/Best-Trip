@@ -1,4 +1,4 @@
-package webapp.webapp;
+package com.despegar.test;
 
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.despegar.jav.domain.Flight;
 import com.despegar.jav.domain.TopRoute;
 import com.despegar.jav.domain.Trip;
+import com.despegar.jav.exceptions.WalletCantBeNegative;
 import com.despegar.jav.service.FlightsPrice;
 import com.despegar.jav.service.TopRoutesReader;
 import com.despegar.jav.service.TripGenerator;
@@ -31,6 +32,32 @@ public class TripGeneratorTest {
 
 	    	tripGenerator = new TripGenerator(flightprice, trr);
 	    	
+	    }
+	    
+	    
+	    @Test(expected = WalletCantBeNegative.class)
+	    public void generateTripExceptionTest(){
+	    	tripGenerator.generateTrip(-12.2, "BUE");
+	    }
+	    
+	    @Test
+	    public void getFilteredVisitedCities(){
+	    	TopRoute r1 = new TopRoute();
+	    	r1.setFrom("AAA");
+	    	r1.setTo("BBB");
+	    	TopRoute r2 = new TopRoute();
+	    	r2.setFrom("AAA");
+	    	r2.setTo("DDD");
+	    	TopRoute r3 = new TopRoute();
+	    	r3.setFrom("FFF");
+	    	r3.setTo("BBB");
+	    	List<String> visitedArrayTest = new ArrayList<String>();
+	    	visitedArrayTest.add("BBB");
+	    	List<TopRoute> toFilterTest = new ArrayList<TopRoute>();
+	    	toFilterTest.add(r1);
+	    	toFilterTest.add(r3);
+	    	toFilterTest.add(r2);
+	    	assertEquals(tripGenerator.filterVisitedCities(visitedArrayTest, toFilterTest).get(0), r2 );
 	    }
 	    
 	    @Test
@@ -52,4 +79,5 @@ public class TripGeneratorTest {
 	    	
 	    	assertEquals(tripGenerator.getCheapestFlight(lista).getFlight(), flight1);
 	    }
+	    
 }
