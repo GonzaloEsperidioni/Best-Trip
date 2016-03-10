@@ -3,15 +3,19 @@ package com.despegar.jav.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.despegar.jav.domain.Destination;
 import com.despegar.jav.domain.Flight;
 import com.despegar.jav.domain.FlightWithRoute;
 import com.despegar.jav.domain.TopRoute;
 import com.despegar.jav.domain.Trip;
+import com.despegar.jav.exceptions.WalletCantBeNegative;
 
 public class TripGenerator {
 
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(TripGenerator.class);
 	private FlightsPrice flightPrice;
 	private TopRoutesReader routes;
 	
@@ -19,18 +23,20 @@ public class TripGenerator {
 		this.flightPrice = flightPrice;
 		this.routes = routes;
 	}
-	
-	public List<TopRoute> getRoutes(){
-		return routes.getTopRoutes();
-	}
-	public Trip generateTrip(double money, String from){
+	public Object generateTrip(double money, String from){
+		if(money < 0){  
+			LOGGER.error("", new WalletCantBeNegative());
+			throw new WalletCantBeNegative(); 
+			}
 		String location = from;
 		Trip trip = new Trip(money);
 		Destination first = new Destination(location, null);
 		this.travel(first, trip);
 		Destination destinationNew = this.searchDestination(location, trip);
-		
+		LOGGER.info("Location Trip : {} Wallet : {}",location ,money);
+		LOGGER.info("Destination Found : {} , Price: {}" ,destinationNew.getCityCode(), destinationNew.getFlight().getAmount());
 		if(this.canITravel(destinationNew, trip)){
+		LOGGER.info("Can Travel? : {}" , this.canITravel(destinationNew, trip));
 		this.travel(destinationNew, trip);
 		}
 		
@@ -49,6 +55,7 @@ public class TripGenerator {
 			trip.payAmount(destinationToTravel.getFlight().getAmount());
 		}
 			trip.addDestination(destinationToTravel);
+			LOGGER.info("Destination Added Successfully");
 		
 	}
 	public boolean canITravel(Destination destinationToTravel, Trip trip){
@@ -64,6 +71,7 @@ public class TripGenerator {
 		}
 		List<TopRoute> routesAvailables = routes.getTopRoutesFor(from);
 		List<String> visitedCities = trip.getCitiesVisited();
+		LOGGER.info("Obtaining routes");
 		routesAvailables = this.filterVisitedCities(visitedCities, routesAvailables);
 		FlightWithRoute cheapestFlight = this.getCheapestFlight(routesAvailables);;
 		Destination destinationReturn = new Destination(
@@ -73,6 +81,7 @@ public class TripGenerator {
 	}
 	public List<TopRoute> filterVisitedCities (List<String> visitedCities, List<TopRoute> routesToFilter){
 		List<TopRoute> filteredRoutes = new ArrayList<TopRoute>();
+		LOGGER.info("Filtering Visited Cities");
 		if(visitedCities.isEmpty()) 
 			{ return routesToFilter; }
 		else {
@@ -87,9 +96,11 @@ public class TripGenerator {
 		}
 	}
 	public FlightWithRoute getCheapestFlight(List<TopRoute> listaRutas){
+		LOGGER.info("Searching Cheapest Flight");
 		Flight cheapestFlight = new Flight("primero", 1000000000000.0); // Para primera comparacion!
 		TopRoute cheapestRoute = new TopRoute();
 		for (TopRoute topRoute : listaRutas) {
+			LOGGER.info("LALALALA {}", topRoute.getFrom());
 			Flight flightemp = flightPrice.getFlightPrice(topRoute); //TODO Ruta devuelva pais
 			if(flightemp.getAmount() < cheapestFlight.getAmount() & flightemp.isValid()){
 				cheapestFlight = flightemp;

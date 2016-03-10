@@ -13,13 +13,13 @@ import com.despegar.jav.domain.TopRoute;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-public class httpFlightService {
+public class HttpFlightService {
 	
 	
     private static ObjectMapper mapper = new ObjectMapper();
     private static DefaultHttpClient httpClient = new DefaultHttpClient();
 
-    public static  FlightJson getFlightPrice(TopRoute route)
+    public  FlightJson getFlightPrice(TopRoute route)
             throws ClientProtocolException, IOException {
 
         HttpGet getRequest = new HttpGet(
@@ -36,10 +36,7 @@ public class httpFlightService {
 
         HttpResponse response = httpClient.execute(getRequest);
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
         FlightJson flightjson = mapper.readValue(rd, FlightJson.class);
-        
-        
         return flightjson;
 
     }

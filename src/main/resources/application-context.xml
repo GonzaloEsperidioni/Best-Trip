@@ -7,10 +7,17 @@
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-
-	<bean id="flightsPrice" class="com.despegar.jav.service.FlightsPrice" />
-	<bean id="topRoutesReader" class="com.despegar.jav.service.TopRoutesReader" />
-
+	
+	<bean id="httpFlightService" class="com.despegar.jav.service.HttpFlightService" />
+ 	
+ 	<bean id="flightsPrice" class="com.despegar.jav.service.FlightsPrice" >
+		<constructor-arg ref="httpFlightService" />
+	</bean>
+	
+	<bean id="topRoutesReaderConector" class="com.despegar.jav.service.TopRoutesReaderConector" />
+	<bean id="topRoutesReader" class="com.despegar.jav.service.TopRoutesReader">
+		<constructor-arg ref="topRoutesReaderConector" />
+	</bean>
 	<bean id="tripGenerator" class="com.despegar.jav.service.TripGenerator">
 		<constructor-arg ref="flightsPrice" />
 		<constructor-arg ref="topRoutesReader" />
@@ -24,8 +31,6 @@
 	<bean id="webConfig" class="com.despegar.jav.WebConfig">
 		<constructor-arg ref="jsonFactory" />
 	</bean>
-	
-	<bean id="FlightsPrice" class="com.despegar.jav.service.FlightsPrice" />
 
 	<context:annotation-config />
 

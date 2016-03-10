@@ -1,33 +1,26 @@
 package com.despegar.jav.service;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.despegar.jav.domain.TopRoute;
-import com.despegar.jav.json.JsonFactory;
-import com.fasterxml.jackson.core.type.TypeReference;
+
 
 public class TopRoutesReader {
-
-	public static void main(String[] args) {
-		TopRoutesReader reader = new TopRoutesReader();
-		System.out.println(reader.getTopRoutes());
-		System.out.println(reader.getTopRoutesFor("BUE"));
+	private static final Logger LOGGER = LoggerFactory.getLogger(TopRoutesReader.class);
+	private TopRoutesReaderConector trrc;
+	public TopRoutesReader(TopRoutesReaderConector trrc){
+		this.trrc = trrc;
 	}
-
-	public List<TopRoute> getTopRoutes() {
-		JsonFactory jsonFactory = new JsonFactory();
-		InputStream inputStream = TopRoutesReader.class.getResourceAsStream("top_routes.json");
-		return jsonFactory.fromJson(new InputStreamReader(inputStream), new TypeReference<List<TopRoute>>() {
-		});
-	}
-
+//	private TopRoutesReaderConector rrc = new TopRoutesReaderConector();
 	public List<TopRoute> getTopRoutesFor(String location){
 		List<TopRoute> routesFromLocation = new ArrayList<TopRoute>();
-		
-		for (TopRoute route : this.getTopRoutes()) {
+		LOGGER.info("Obtaining Routes from : {} ", location);
+		for (TopRoute route : trrc.getTopRoutes()) {
 			if(route.getFrom().equals(location)){
 				routesFromLocation.add(route);
 			}

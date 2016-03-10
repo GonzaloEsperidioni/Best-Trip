@@ -25,12 +25,17 @@ public class FlightJson {
     public void setItems(List<Item> items) {
         this.items = items;
     }
-    
+    public void setAirline(String newAirline){
+    	items.get(0).setAirline(newAirline);
+    }
     public String getAirline() {
     	if(items.isEmpty())
     	{return "";}
     	return items.get(0).getAirline(); 
     	}
+    public void setTotal(Double newTotal){
+    	items.get(0).getPriceDetail().setTotal(newTotal);
+    }
     public Double getTotal() {
     	if(items.isEmpty())
     	{ return (double) 0;

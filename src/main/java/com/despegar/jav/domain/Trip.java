@@ -1,13 +1,15 @@
 package com.despegar.jav.domain;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Trip {
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Trip.class);
 	private double wallet;
 	private List<Destination> destinations = new ArrayList<Destination>();
 
@@ -37,7 +39,9 @@ public class Trip {
 		return destinations;
 	}
 	public void payAmount(Double toPay){
+		LOGGER.info("To Pay : {}", toPay);
 		wallet -= toPay;
+		LOGGER.info("Wallet : {}", wallet);
 	}
 	@JsonIgnore
 	public List<String> getCitiesVisited(){
