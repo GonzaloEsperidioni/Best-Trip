@@ -45,7 +45,7 @@ public class TripGenerator {
 			if(destinationNew.getCityCode() == null){ return trip; }
 			this.travel(destinationNew, trip);
 		}
-		
+		LOGGER.info("Trip Generator has run Successfully");
 		return trip;
 		
 	}
@@ -100,7 +100,6 @@ public class TripGenerator {
 		Flight cheapestFlight = new Flight("primero", 1000000000000.0); // Para primera comparacion!
 		TopRoute cheapestRoute = new TopRoute();
 		for (TopRoute topRoute : listaRutas) {
-			LOGGER.info("LALALALA {}", topRoute.getFrom());
 			Flight flightemp = flightPrice.getFlightPrice(topRoute); //TODO Ruta devuelva pais
 			if(flightemp.getAmount() < cheapestFlight.getAmount() & flightemp.isValid()){
 				cheapestFlight = flightemp;

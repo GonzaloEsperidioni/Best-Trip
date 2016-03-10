@@ -22,23 +22,24 @@ public class FlightsPriceTest {
 		private FlightJson flightjson;
 		@Before
 		public void setUp(){
-			flightPrice = new FlightsPrice();
+			
 			httpFlightService = new HttpFlightService();
 			routeFalsa = new TopRoute();
 			flightjson = new FlightJson();
 			routeFalsa.setFrom("BUE");
 			routeFalsa.setTo("MIA");
 			httpFlightService = mock(HttpFlightService.class);
+			flightjson = mock(FlightJson.class);
+			flightPrice = new FlightsPrice(httpFlightService);
 		}
 		
 		@Test
 		public void getFlightPriceTest() throws ClientProtocolException, IOException{ 
-		flightjson.setAirline("Malasia");
-		flightjson.setTotal(1000.0);
-	
-		when(httpFlightService.getFlightPrice(routeFalsa)).thenReturn(flightjson);
-		
-		assertEquals( flightPrice.getFlightPrice(routeFalsa) , new Flight("Malasia", 1000.0).getAmount());
+			
+		when(flightjson.getAirline()).thenReturn("Malasia");
+		when(flightjson.getTotal()).thenReturn(100.5);
+		when(httpFlightService.getFlightPrice(routeFalsa)).thenReturn(flightjson);		
+		assertEquals( flightPrice.getFlightPrice(routeFalsa).getAmount() , new Flight("Malasia", 100.5).getAmount());
 		
 		}
 }
